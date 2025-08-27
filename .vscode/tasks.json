@@ -1,0 +1,64 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Kill Ports",
+      "type": "shell",
+      "command": "lsof -ti:6000,6020 | xargs kill -9 || true",
+      "presentation": {
+        "reveal": "silent"
+      }
+    },
+    {
+      "label": "Start All Services",
+      "dependsOn": ["Kill Ports", "Start Gateway", "Start User Service"],
+      "dependsOrder": "sequence",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "type": "npm",
+      "script": "start:gateway",
+      "path": "apps/gateway/",
+      "label": "Start Gateway",
+      "detail": "Running Gateway Service",
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": {
+          "regexp": "^.*$",
+          "file": 1,
+          "location": 2,
+          "message": 3
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*starting.*$",
+          "endsPattern": "^.*Nest application successfully started.*$"
+        }
+      }
+    },
+    {
+      "type": "npm",
+      "script": "start:user",
+      "path": "apps/user/",
+      "label": "Start User Service",
+      "detail": "Running User Service",
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": {
+          "regexp": "^.*$",
+          "file": 1,
+          "location": 2,
+          "message": 3
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*starting.*$",
+          "endsPattern": "^.*Nest application successfully started.*$"
+        }
+      }
+    }
+  ]
+} 
